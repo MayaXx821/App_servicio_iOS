@@ -1,0 +1,56 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'  // Asegúrate de que esta línea esté aquí
+
+android {
+    namespace = "com.example.app_servicios_nuevo"
+    compileSdk = 34  // Versión recomendada actualmente del SDK
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    defaultConfig {
+        applicationId = "com.example.app_servicios_nuevo"
+        minSdk = 21  // Asegúrate de que esta sea la versión mínima soportada por tus dependencias
+        targetSdk = 34  // La última versión estable
+        versionCode = 1
+        versionName = "1.0"
+    }
+
+    buildTypes {
+        release {
+            // Carga el archivo key.properties
+            def keystorePropertiesFile = rootProject.file("key.properties")
+            def keystoreProperties = new Properties()
+            keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+            // Configura la firma del APK
+            signingConfig signingConfigs.create("release") {
+                storeFile file(keystoreProperties['storeFile'])
+                storePassword keystoreProperties['storePassword']
+                keyAlias keystoreProperties['keyAlias']
+                keyPassword keystoreProperties['keyPassword']
+            }
+            
+            minifyEnabled false  // No minimizar el código en modo release por ahora
+            shrinkResources false  // No reducir recursos en esta fase
+        }
+    }
+}
+
+// Define flutterRoot aquí
+ext {
+    flutterRoot = 'C:/Users/mayau/Escritorio/flutter' // Cambia esto a la ruta correcta donde está instalado Flutter
+}
+
+// Esta línea debe ir aquí
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
+flutter {
+    source = "../.."
+}
